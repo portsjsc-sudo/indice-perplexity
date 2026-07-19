@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Índice Perplexity — GitHub Pages + JSONBin</title>
+  <title>Índice Perplexity – GitHub Pages + JSONBin</title>
   <style>
     :root {
       --bg: #f7f6f2;
@@ -27,426 +27,508 @@
       --space-4: 16px;
       --space-5: 20px;
       --space-6: 24px;
-      --space-8: 32px;
-      --space-10: 40px;
-      --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #171614;
-        --surface: #1d1c1a;
-        --surface-2: #252320;
-        --border: #393733;
-        --text: #e6e1d7;
-        --muted: #aba499;
-        --primary: #4f98a3;
-        --primary-hover: #67aab4;
-        --shadow: 0 10px 28px rgba(0,0,0,.35);
-      }
-    }
+
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
-    body { min-height: 100vh; }
-    a { color: var(--primary); text-decoration: none; }
-    a:hover { color: var(--primary-hover); }
-    button, input, select, textarea { font: inherit; }
-    .wrap { max-width: 1160px; margin: 0 auto; padding: var(--space-6); }
-    .hero { display: flex; justify-content: space-between; gap: var(--space-4); align-items: flex-start; flex-wrap: wrap; margin-bottom: var(--space-5); }
-    .hero h1 { margin: 0 0 8px 0; font-size: clamp(30px, 3vw, 44px); }
-    .hero p { margin: 0; max-width: 76ch; color: var(--muted); }
-    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow); }
-    .pad { padding: var(--space-5); }
-    .toolbar, .row { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-    .btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: 11px 14px; border-radius: var(--r-md); cursor: pointer; transition: .18s ease; }
-    .btn:hover { transform: translateY(-1px); }
-    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .btn.primary:hover { background: var(--primary-hover); }
-    .btn.small { padding: 7px 10px; font-size: 13px; }
-    .btn.danger { color: var(--danger); }
-    .grid-setup { display: grid; grid-template-columns: 1.2fr 1.1fr auto; gap: var(--space-3); align-items: end; }
-    .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-    .input, .select, .textarea { width: 100%; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--border); background: var(--surface); color: var(--text); }
-    .textarea { min-height: 86px; resize: vertical; }
-    .input:focus, .select:focus, .textarea:focus { outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent); border-color: var(--primary); }
-    .hint, .micro { color: var(--muted); font-size: 13px; line-height: 1.55; }
-    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; }
-    .badge.ok { color: var(--success); }
-    .badge.warn { color: var(--warning); }
-    .badge.err { color: var(--danger); }
-    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--space-3); margin: var(--space-4) 0; }
-    .stat { border: 1px solid var(--border); background: var(--surface-2); border-radius: var(--r-md); padding: var(--space-4); }
-    .stat .k { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .stat .v { font-size: 28px; font-weight: 700; }
-    .controls { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr auto; gap: var(--space-3); margin-bottom: var(--space-4); }
-    .list { display: grid; gap: var(--space-3); }
-    .item { padding: var(--space-4); border-radius: var(--r-md); border: 1px solid var(--border); background: var(--surface); }
-    .item-top { display: flex; gap: var(--space-3); justify-content: space-between; align-items: flex-start; }
-    .item h3 { margin: 0 0 8px 0; font-size: 18px; }
-    .meta { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-    .pill { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); }
-    .callout { margin-top: var(--space-4); padding: var(--space-4); border: 1px dashed var(--border); border-radius: var(--r-md); background: var(--surface-2); }
-    .status { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3); }
-    .empty { text-align: center; color: var(--muted); padding: var(--space-10); }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; padding: var(--space-4); }
-    .modal-backdrop.open { display: flex; }
-    .modal { width: min(780px, 100%); }
-    .modal-header, .modal-body { padding: var(--space-5); }
-    .modal-header { border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
-    .full { grid-column: 1 / -1; }
-    .toast { position: fixed; right: 20px; bottom: 20px; background: var(--text); color: var(--bg); padding: 12px 14px; border-radius: 12px; opacity: 0; transform: translateY(14px); transition: .22s ease; pointer-events: none; }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    @media (max-width: 920px) {
-      .grid-setup, .controls, .stats, .form-grid { grid-template-columns: 1fr; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .app {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .shell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #fcfcfa 0%, #f8f7f3 100%);
+    }
+
+    .title-wrap h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .title-wrap p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 680px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .content {
+      padding: 14px 16px 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+    }
+
+    .stat__label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .stat__value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .form-control, .btn, select, input, textarea {
+      font: inherit;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+    }
+
+    textarea.form-control {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn--primary { background: var(--primary); color: #fff; }
+    .btn--primary:hover { background: var(--primary-hover); }
+    .btn--ghost { background: var(--surface-2); color: var(--text); }
+    .btn--ghost:hover { background: #e7e2d7; }
+    .btn--danger { background: #f6e3e6; color: var(--danger); }
+    .btn--sm { padding: 6px 10px; font-size: 12px; }
+
+    .settings-panel {
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .settings-summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 12px;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .settings-summary::-webkit-details-marker { display: none; }
+    .settings-summary::after {
+      content: '▾';
+      float: right;
+      color: var(--muted);
+    }
+    .settings-panel[open] .settings-summary::after { content: '▴'; }
+
+    .settings-body {
+      padding: 0 12px 12px 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .settings-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status[data-type="ok"] { color: var(--success); }
+    .status[data-type="warn"] { color: var(--warning); }
+    .status[data-type="err"] { color: var(--danger); }
+
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .entry-card {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      background: #fff;
+    }
+
+    .entry-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .entry-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .entry-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-width: 0;
+      margin-bottom: 4px;
+    }
+
+    .entry-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .entry-title:hover { color: var(--primary); }
+
+    .entry-badge,
+    .entry-updated,
+    .entry-parent,
+    .entry-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface-2);
+      white-space: nowrap;
+    }
+
+    .entry-description {
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--text);
+      margin-top: 4px;
+    }
+
+    .entry-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .entry-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .empty {
+      border: 1px dashed var(--border);
+      border-radius: var(--r-md);
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      background: #fff;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.is-open { display: flex; }
+
+    .modal {
+      width: min(700px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .modal__header,
+    .modal__footer {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal__footer {
+      border-top: 1px solid var(--border);
+      border-bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal__body { padding: 14px 16px; }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-grid .full { grid-column: 1 / -1; }
+
+    @media (max-width: 860px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controls { grid-template-columns: 1fr 1fr; }
+      .settings-grid, .modal-grid { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; }
+      .entry-top { flex-direction: column; }
+      .entry-actions { justify-content: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .app { padding: 10px; }
+      .content, .topbar { padding: 12px; }
+      .stats, .controls { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="hero">
-      <div>
-        <h1>Índice Perplexity</h1>
-        <p>Versión ajustada para <strong>GitHub Pages + JSONBin</strong>, con URL completa a tus Espacios e Hilos en Perplexity y sincronización manual entre equipos.</p>
-      </div>
-      <div class="toolbar">
-        <button class="btn" id="exportBtn">Exportar JSON</button>
-        <button class="btn" id="importBtn">Importar JSON</button>
-        <button class="btn primary" id="addBtn">Agregar entrada</button>
-      </div>
-    </header>
+  <div class="app">
+    <div class="shell">
+      <header class="topbar">
+        <div class="title-wrap">
+          <h1>Índice Perplexity</h1>
+          <p>Catálogo compacto de Espacios e Hilos con sincronización entre equipos mediante JSONBin.</p>
+        </div>
+        <div class="toolbar">
+          <button id="addBtn" class="btn btn--primary">+ Agregar</button>
+          <button id="importBtn" class="btn btn--ghost">Importar JSON</button>
+          <button id="exportBtn" class="btn btn--ghost">Exportar JSON</button>
+        </div>
+      </header>
 
-    <section class="panel pad">
-      <h2 style="margin:0 0 14px 0;">Configuración JSONBin</h2>
-      <div class="grid-setup">
-        <div class="field">
-          <label for="binId">Bin ID</label>
-          <input id="binId" class="input mono" placeholder="Ej: 687a76c6ae596e708fc0b4bf">
-        </div>
-        <div class="field">
-          <label for="accessKey">X-Access-Key limitada</label>
-          <input id="accessKey" class="input mono" placeholder="$2a$10$...">
-        </div>
-        <div class="row">
-          <button class="btn" id="pullBtn">Descargar</button>
-          <button class="btn primary" id="pushBtn">Subir</button>
-        </div>
-      </div>
-      <div class="status" id="syncStatus"></div>
-      <div class="callout">
-        <div class="hint">
-          Esta versión usa el endpoint estándar de JSONBin para leer el último contenido del bin y sobrescribirlo al subir cambios. Para frontend conviene usar <span class="mono">X-Access-Key</span> en vez de <span class="mono">X-Master-Key</span>; JSONBin lo recomienda explícitamente porque la Master Key tiene acceso completo y es más apropiada para backend, mientras que las Access Keys se pueden configurar por endpoint y con permisos acotados. [web:121][web:123]
-        </div>
-      </div>
-    </section>
+      <main class="content">
+        <details class="settings-panel">
+          <summary class="settings-summary">Ajustes</summary>
+          <div class="settings-body">
+            <div class="settings-grid">
+              <div>
+                <label class="label" for="binId">Bin ID</label>
+                <input id="binId" class="form-control" type="text" placeholder="Ej: 6879d25dad19ca34f894e486">
+              </div>
+              <div>
+                <label class="label" for="accessKey">X-Access-Key</label>
+                <input id="accessKey" class="form-control" type="password" placeholder="Pega aquí tu access key">
+              </div>
+            </div>
+            <div class="settings-actions">
+              <button id="pullBtn" class="btn btn--ghost">Descargar</button>
+              <button id="pushBtn" class="btn btn--primary">Subir</button>
+              <button id="saveLocalBtn" class="btn btn--ghost">Guardar local</button>
+            </div>
+            <div id="syncStatus" class="status" data-type="ok">Listo</div>
+          </div>
+        </details>
 
-    <section class="panel pad" style="margin-top:24px;">
-      <div class="controls">
-        <div class="field">
-          <label for="search">Buscar</label>
-          <input id="search" class="input" placeholder="Título, tema, etiquetas o nombre del espacio padre">
-        </div>
-        <div class="field">
-          <label for="typeFilter">Tipo</label>
-          <select id="typeFilter" class="select">
+        <section class="stats">
+          <div class="stat"><span class="stat__label">Entradas</span><span id="statEntries" class="stat__value">0</span></div>
+          <div class="stat"><span class="stat__label">Espacios</span><span id="statSpaces" class="stat__value">0</span></div>
+          <div class="stat"><span class="stat__label">Hilos</span><span id="statThreads" class="stat__value">0</span></div>
+          <div class="stat"><span class="stat__label">Etiquetas</span><span id="statTags" class="stat__value">0</span></div>
+        </section>
+
+        <section class="controls">
+          <input id="search" class="form-control" type="search" placeholder="Buscar por título, descripción, etiqueta o espacio padre">
+          <select id="typeFilter" class="form-control">
             <option value="all">Todos</option>
             <option value="space">Espacios</option>
             <option value="thread">Hilos</option>
           </select>
-        </div>
-        <div class="field">
-          <label for="tagFilter">Etiqueta</label>
-          <select id="tagFilter" class="select"><option value="">Todas</option></select>
-        </div>
-        <div class="field">
-          <label for="sortBy">Orden</label>
-          <select id="sortBy" class="select">
-            <option value="newest">Más recientes</option>
-            <option value="oldest">Más antiguos</option>
-            <option value="alpha">A → Z</option>
-            <option value="alpha-desc">Z → A</option>
+          <select id="tagFilter" class="form-control">
+            <option value="all">Todas las etiquetas</option>
           </select>
-        </div>
-        <div class="row" style="align-items:end;">
-          <button class="btn" id="saveLocalBtn">Guardar local</button>
-        </div>
-      </div>
+          <select id="sortBy" class="form-control">
+            <option value="updated-desc">Actualización: más recientes</option>
+            <option value="updated-asc">Actualización: más antiguas</option>
+            <option value="title-asc">Título: A-Z</option>
+            <option value="title-desc">Título: Z-A</option>
+          </select>
+        </section>
 
-      <div class="stats">
-        <div class="stat"><div class="k">Total</div><div class="v" id="statTotal">0</div></div>
-        <div class="stat"><div class="k">Espacios</div><div class="v" id="statSpaces">0</div></div>
-        <div class="stat"><div class="k">Hilos</div><div class="v" id="statThreads">0</div></div>
-        <div class="stat"><div class="k">Etiquetas</div><div class="v" id="statTags">0</div></div>
-      </div>
-
-      <div class="list" id="list"></div>
-      <p class="micro" style="margin-top:16px;">Flujo sugerido: en tu PC Windows haces cambios y pulsas <strong>Subir</strong>; en tu Mac abres la misma app publicada en GitHub Pages y pulsas <strong>Descargar</strong> antes de seguir trabajando.</p>
-    </section>
+        <section id="entriesList" class="list"></section>
+      </main>
+    </div>
   </div>
 
-  <div class="modal-backdrop" id="modalBackdrop">
-    <div class="panel modal">
-      <div class="modal-header">
-        <h2 id="modalTitle" style="margin:0;">Nueva entrada</h2>
-        <button class="btn small" id="closeModalBtn">Cerrar</button>
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__header">
+        <strong id="modalTitle">Nueva entrada</strong>
       </div>
-      <div class="modal-body">
+      <div class="modal__body">
         <form id="entryForm">
-          <div class="form-grid">
-            <div class="field">
-              <label for="entryType">Tipo</label>
-              <select id="entryType" class="select">
+          <input id="entryId" type="hidden">
+          <div class="modal-grid">
+            <div>
+              <label class="label" for="entryType">Tipo</label>
+              <select id="entryType" class="form-control">
                 <option value="space">Espacio</option>
                 <option value="thread">Hilo</option>
               </select>
             </div>
-            <div class="field">
-              <label for="entryParent">Espacio padre</label>
-              <select id="entryParent" class="select"><option value="">(Sin espacio padre)</option></select>
+            <div>
+              <label class="label" for="entryParentSpace">Espacio padre</label>
+              <input id="entryParentSpace" class="form-control" type="text" placeholder="Solo para hilos o agrupación manual">
             </div>
-            <div class="field full">
-              <label for="entryTitle">Título</label>
-              <input id="entryTitle" class="input" required>
+            <div class="full">
+              <label class="label" for="entryTitle">Título</label>
+              <input id="entryTitle" class="form-control" type="text" required>
             </div>
-            <div class="field full">
-              <label for="entryUrl">URL completa de Perplexity</label>
-              <input id="entryUrl" class="input" type="url" placeholder="https://www.perplexity.ai/...">
+            <div class="full">
+              <label class="label" for="entryUrl">Enlace Perplexity</label>
+              <input id="entryUrl" class="form-control" type="url" placeholder="https://www.perplexity.ai/...">
             </div>
-            <div class="field full">
-              <label for="entryDesc">Tema / descripción breve</label>
-              <textarea id="entryDesc" class="textarea"></textarea>
+            <div class="full">
+              <label class="label" for="entryDescription">Descripción</label>
+              <textarea id="entryDescription" class="form-control" placeholder="Resumen breve para recordar el contenido"></textarea>
             </div>
-            <div class="field full">
-              <label for="entryTags">Etiquetas</label>
-              <input id="entryTags" class="input" placeholder="simulación, puerto, DES">
+            <div class="full">
+              <label class="label" for="entryTags">Etiquetas</label>
+              <input id="entryTags" class="form-control" type="text" placeholder="separadas, por, comas">
             </div>
-          </div>
-          <div class="row" style="margin-top:16px; justify-content:flex-end;">
-            <button type="button" class="btn" id="cancelBtn">Cancelar</button>
-            <button type="submit" class="btn primary">Guardar</button>
           </div>
         </form>
+      </div>
+      <div class="modal__footer">
+        <button id="cancelBtn" class="btn btn--ghost" type="button">Cancelar</button>
+        <button id="saveEntryBtn" class="btn btn--primary" type="submit" form="entryForm">Guardar</button>
       </div>
     </div>
   </div>
 
-  <input type="file" id="fileInput" accept="application/json,.json" hidden>
-  <div class="toast" id="toast"></div>
+  <input id="fileInput" type="file" accept="application/json" hidden>
 
   <script>
-    const STORAGE_KEY = 'pplx_index_jsonbin_v1';
-    const SETTINGS_KEY = 'pplx_index_jsonbin_settings_v1';
+    const STORAGE_KEY = 'perplexity-index-local-v2';
+    const SETTINGS_KEY = 'perplexity-index-settings-v2';
     let entries = [];
-    let editingId = null;
-    const $ = id => document.getElementById(id);
 
-    function toast(msg) {
-      const t = $('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2400);
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
     }
 
     function uid() {
-      return 'id_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      return 'id-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
     }
 
-    function escapeHtml(v='') {
-      return String(v).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    function toast(message) {
+      console.log(message);
     }
 
-    function saveSettingsAndLocal(silent = false) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-        binId: $('binId').value.trim(),
-        accessKey: $('accessKey').value.trim()
-      }));
-      updateStatus('Local actualizado', 'ok');
-      if (!silent) toast('Guardado en este navegador');
+    function updateStatus(message, type = 'ok') {
+      const el = $('syncStatus');
+      el.textContent = message;
+      el.dataset.type = type;
     }
 
-    function loadSettingsAndLocal() {
-      try { entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { entries = []; }
-      try {
-        const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
-        $('binId').value = s.binId || '';
-        $('accessKey').value = s.accessKey || '';
-      } catch {}
+    function entryTypeLabel(type) {
+      return type === 'thread' ? 'Hilo' : 'Espacio';
     }
 
-    function getParentTitle(id) {
-      const item = entries.find(e => e.id === id);
-      return item ? item.title : '';
+    function formatUpdatedAt(value) {
+      if (!value) return '';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' });
     }
-
-    function updateParentOptions() {
-      const select = $('entryParent');
-      const current = select.value;
-      select.innerHTML = '<option value="">(Sin espacio padre)</option>';
-      entries.filter(e => e.type === 'space').sort((a,b)=>a.title.localeCompare(b.title,'es')).forEach(space => {
-        const o = document.createElement('option');
-        o.value = space.id;
-        o.textContent = space.title;
-        select.appendChild(o);
-      });
-      select.value = current || '';
-    }
-
-    function updateTagFilter() {
-      const select = $('tagFilter');
-      const current = select.value;
-      const tags = [...new Set(entries.flatMap(e => e.tags || []))].sort((a,b)=>a.localeCompare(b,'es'));
-      select.innerHTML = '<option value="">Todas</option>';
-      tags.forEach(tag => {
-        const o = document.createElement('option');
-        o.value = tag;
-        o.textContent = tag;
-        select.appendChild(o);
-      });
-      select.value = current;
-    }
-
-    function currentView() {
-      const q = $('search').value.trim().toLowerCase();
-      const type = $('typeFilter').value;
-      const tag = $('tagFilter').value;
-      let arr = entries.filter(e => {
-        if (type !== 'all' && e.type !== type) return false;
-        if (tag && !(e.tags || []).includes(tag)) return false;
-        if (!q) return true;
-        const blob = [e.title, e.description || '', e.url || '', (e.tags || []).join(' '), getParentTitle(e.parentSpace || '')].join(' ').toLowerCase();
-        return blob.includes(q);
-      });
-      const sort = $('sortBy').value;
-      if (sort === 'newest') arr.sort((a,b)=>new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
-      if (sort === 'oldest') arr.sort((a,b)=>new Date(a.createdAt) - new Date(b.createdAt));
-      if (sort === 'alpha') arr.sort((a,b)=>a.title.localeCompare(b.title,'es'));
-      if (sort === 'alpha-desc') arr.sort((a,b)=>b.title.localeCompare(a.title,'es'));
-      return arr;
-    }
-
-    function renderStats(arr) {
-      $('statTotal').textContent = arr.length;
-      $('statSpaces').textContent = arr.filter(e => e.type === 'space').length;
-      $('statThreads').textContent = arr.filter(e => e.type === 'thread').length;
-      $('statTags').textContent = new Set(arr.flatMap(e => e.tags || [])).size;
-    }
-
-    function render() {
-      updateParentOptions();
-      updateTagFilter();
-      const arr = currentView();
-      renderStats(arr);
-      if (!arr.length) {
-        $('list').innerHTML = '<div class="empty panel">No hay entradas para mostrar.</div>';
-        return;
-      }
-      $('list').innerHTML = arr.map(e => {
-        const tags = (e.tags || []).map(t => `<span class="pill">${escapeHtml(t)}</span>`).join('');
-        const parent = e.parentSpace ? `<span class="pill">Espacio: ${escapeHtml(getParentTitle(e.parentSpace))}</span>` : '';
-        const link = e.url ? `<a href="${escapeHtml(e.url)}" target="_blank" rel="noopener noreferrer">Abrir en Perplexity</a>` : '<span class="pill">Sin URL</span>';
-        return `
-          <article class="item">
-            <div class="item-top">
-              <div>
-                <h3>${escapeHtml(e.title)}</h3>
-                <div class="meta">
-                  <span class="pill">${e.type === 'space' ? 'Espacio' : 'Hilo'}</span>
-                  ${parent}
-                  ${tags}
-                  <span class="pill">Actualizado: ${new Date(e.updatedAt || e.createdAt).toLocaleString('es-CL')}</span>
-                </div>
-                ${e.description ? `<p class="micro" style="margin:12px 0 0 0;">${escapeHtml(e.description)}</p>` : ''}
-                ${e.url ? `<p class="micro" style="margin:8px 0 0 0;"><span class="mono">${escapeHtml(e.url)}</span></p>` : ''}
-              </div>
-              <div class="row">
-                <button class="btn small" onclick="editEntry('${e.id}')">Editar</button>
-                <button class="btn small" onclick="duplicateEntry('${e.id}')">Duplicar</button>
-                <button class="btn small danger" onclick="removeEntry('${e.id}')">Eliminar</button>
-                ${link}
-              </div>
-            </div>
-          </article>
-        `;
-      }).join('');
-    }
-
-    function updateStatus(message, tone='ok') {
-      const binId = $('binId').value.trim();
-      $('syncStatus').innerHTML = `
-        <span class="badge ${tone}">${escapeHtml(message)}</span>
-        <span class="badge">${entries.length} entradas locales</span>
-        <span class="badge">${binId ? 'Bin configurado' : 'Sin Bin ID'}</span>
-      `;
-    }
-
-    function openModal() {
-      editingId = null;
-      $('modalTitle').textContent = 'Nueva entrada';
-      $('entryForm').reset();
-      updateParentOptions();
-      $('modalBackdrop').classList.add('open');
-    }
-    function closeModal() { $('modalBackdrop').classList.remove('open'); }
-
-    function editEntry(id) {
-      const e = entries.find(x => x.id === id);
-      if (!e) return;
-      editingId = id;
-      $('modalTitle').textContent = 'Editar entrada';
-      $('entryType').value = e.type;
-      updateParentOptions();
-      $('entryParent').value = e.parentSpace || '';
-      $('entryTitle').value = e.title || '';
-      $('entryUrl').value = e.url || '';
-      $('entryDesc').value = e.description || '';
-      $('entryTags').value = (e.tags || []).join(', ');
-      $('modalBackdrop').classList.add('open');
-    }
-
-    function duplicateEntry(id) {
-      const e = entries.find(x => x.id === id);
-      if (!e) return;
-      entries.unshift({ ...e, id: uid(), title: e.title + ' (copia)', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
-      saveSettingsAndLocal(true);
-      render();
-      toast('Entrada duplicada');
-    }
-
-    function removeEntry(id) {
-      const e = entries.find(x => x.id === id);
-      if (!e) return;
-      if (!confirm(`¿Eliminar "${e.title}"?`)) return;
-      entries = entries.filter(x => x.id !== id);
-      entries = entries.map(x => x.parentSpace === id ? { ...x, parentSpace: '' } : x);
-      saveSettingsAndLocal(true);
-      render();
-      toast('Entrada eliminada');
-    }
-
-    $('entryForm').addEventListener('submit', (ev) => {
-      ev.preventDefault();
-      const payload = {
-        type: $('entryType').value,
-        parentSpace: $('entryParent').value || '',
-        title: $('entryTitle').value.trim(),
-        url: $('entryUrl').value.trim(),
-        description: $('entryDesc').value.trim(),
-        tags: $('entryTags').value.split(',').map(s => s.trim()).filter(Boolean),
-        updatedAt: new Date().toISOString()
-      };
-      if (!payload.title) return toast('El título es obligatorio');
-      if (editingId) {
-        const idx = entries.findIndex(e => e.id === editingId);
-        entries[idx] = { ...entries[idx], ...payload };
-      } else {
-        entries.unshift({ id: uid(), createdAt: new Date().toISOString(), ...payload });
-      }
-      saveSettingsAndLocal(true);
-      closeModal();
-      render();
-      toast(editingId ? 'Entrada actualizada' : 'Entrada agregada');
-    });
 
     function buildPayload() {
       return {
@@ -458,183 +540,381 @@
       };
     }
 
-function jsonbinHeaders() {
-  const accessKey = $('accessKey').value.trim();
-  if (!accessKey) throw new Error('Falta X-Access-Key');
-  return {
-    'Content-Type': 'application/json',
-    'X-Access-Key': accessKey
-  };
-}
+    function saveSettingsAndLocal(saveSettings = true) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+        if (saveSettings) {
+          localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+            binId: $('binId').value.trim(),
+            accessKey: $('accessKey').value.trim()
+          }));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-function jsonbinUrlLatest() {
-  const binId = $('binId').value.trim();
-  if (!binId) throw new Error('Falta Bin ID');
-  return `https://api.jsonbin.io/v3/b/${binId}/latest?ts=${Date.now()}`;
-}
+    function loadSettingsAndLocal() {
+      try {
+        const rawEntries = localStorage.getItem(STORAGE_KEY);
+        entries = rawEntries ? JSON.parse(rawEntries) : [];
+      } catch {
+        entries = [];
+      }
 
-function jsonbinUrlBase() {
-  const binId = $('binId').value.trim();
-  if (!binId) throw new Error('Falta Bin ID');
-  return `https://api.jsonbin.io/v3/b/${binId}`;
-}
+      try {
+        const rawSettings = localStorage.getItem(SETTINGS_KEY);
+        const settings = rawSettings ? JSON.parse(rawSettings) : {};
+        $('binId').value = settings.binId || '';
+        $('accessKey').value = settings.accessKey || '';
+      } catch {
+        $('binId').value = '';
+        $('accessKey').value = '';
+      }
+    }
 
-function normalizeRemotePayload(data) {
-  const record = data?.record || data || {};
-  return {
-    app: record.app || 'perplexity-index',
-    storage: record.storage || 'jsonbin',
-    version: Number.isFinite(record.version) ? record.version : 1,
-    updatedAt: record.updatedAt || new Date().toISOString(),
-    entries: Array.isArray(record.entries) ? record.entries : []
-  };
-}
+    function mergeEntries(base, incoming) {
+      const map = new Map(base.map(e => [e.id, e]));
+      incoming.forEach(item => {
+        const prev = map.get(item.id);
+        if (!prev) {
+          map.set(item.id, item);
+        } else {
+          const a = new Date(prev.updatedAt || prev.createdAt || 0).getTime();
+          const b = new Date(item.updatedAt || item.createdAt || 0).getTime();
+          if (b >= a) map.set(item.id, item);
+        }
+      });
+      return [...map.values()];
+    }
 
-async function readRemotePayload() {
-  const res = await fetch(jsonbinUrlLatest(), {
-    method: 'GET',
-    headers: jsonbinHeaders(),
-    cache: 'no-store'
-  });
-  if (!res.ok) throw new Error('GET ' + res.status);
-  const data = await res.json();
-  return normalizeRemotePayload(data);
-}
+    function jsonbinHeaders() {
+      const accessKey = $('accessKey').value.trim();
+      if (!accessKey) throw new Error('Falta X-Access-Key');
+      return {
+        'Content-Type': 'application/json',
+        'X-Access-Key': accessKey
+      };
+    }
 
-async function pullJsonbin() {
-  try {
-    updateStatus('Descargando desde JSONBin...', 'warn');
+    function jsonbinUrlLatest() {
+      const binId = $('binId').value.trim();
+      if (!binId) throw new Error('Falta Bin ID');
+      return `https://api.jsonbin.io/v3/b/${binId}/latest?ts=${Date.now()}`;
+    }
 
-    const remote = await readRemotePayload();
-    entries = Array.isArray(remote.entries) ? remote.entries : [];
+    function jsonbinUrlBase() {
+      const binId = $('binId').value.trim();
+      if (!binId) throw new Error('Falta Bin ID');
+      return `https://api.jsonbin.io/v3/b/${binId}`;
+    }
 
-    saveSettingsAndLocal(true);
-    render();
+    function normalizeRemotePayload(data) {
+      const record = data?.record || data || {};
+      return {
+        app: record.app || 'perplexity-index',
+        storage: record.storage || 'jsonbin',
+        version: Number.isFinite(record.version) ? record.version : 1,
+        updatedAt: record.updatedAt || new Date().toISOString(),
+        entries: Array.isArray(record.entries) ? record.entries : []
+      };
+    }
 
-    updateStatus(`Descarga correcta: ${entries.length} entradas remotas`, 'ok');
-    toast(`Datos descargados (${entries.length})`);
-  } catch (err) {
-    console.error(err);
-    updateStatus('Error al descargar', 'err');
-    toast('No se pudo descargar desde JSONBin');
-  }
-}
+    async function readRemotePayload() {
+      const res = await fetch(jsonbinUrlLatest(), {
+        method: 'GET',
+        headers: jsonbinHeaders(),
+        cache: 'no-store'
+      });
+      if (!res.ok) throw new Error('GET ' + res.status);
+      const data = await res.json();
+      return normalizeRemotePayload(data);
+    }
 
-async function pushJsonbin() {
-  try {
-    updateStatus('Subiendo a JSONBin...', 'warn');
+    async function pullJsonbin() {
+      try {
+        updateStatus('Descargando desde JSONBin...', 'warn');
+        const remote = await readRemotePayload();
+        entries = Array.isArray(remote.entries) ? remote.entries : [];
+        saveSettingsAndLocal(true);
+        render();
+        updateStatus(`Descarga correcta: ${entries.length} entradas remotas`, 'ok');
+        toast(`Datos descargados (${entries.length})`);
+      } catch (err) {
+        console.error(err);
+        updateStatus('Error al descargar', 'err');
+        toast('No se pudo descargar desde JSONBin');
+      }
+    }
 
-    const payload = buildPayload();
-    payload.updatedAt = new Date().toISOString();
-    payload.entries = Array.isArray(entries) ? entries.map(e => ({
-      id: e.id,
-      createdAt: e.createdAt || new Date().toISOString(),
-      updatedAt: e.updatedAt || e.createdAt || new Date().toISOString(),
-      type: e.type || 'space',
-      parentSpace: e.parentSpace || '',
-      title: e.title || '',
-      url: e.url || '',
-      description: e.description || '',
-      tags: Array.isArray(e.tags) ? e.tags : []
-    })) : [];
+    async function pushJsonbin() {
+      try {
+        updateStatus('Subiendo a JSONBin...', 'warn');
 
-    const localCount = payload.entries.length;
+        const payload = buildPayload();
+        payload.updatedAt = new Date().toISOString();
+        payload.entries = Array.isArray(entries) ? entries.map(e => ({
+          id: e.id,
+          createdAt: e.createdAt || new Date().toISOString(),
+          updatedAt: e.updatedAt || e.createdAt || new Date().toISOString(),
+          type: e.type || 'space',
+          parentSpace: e.parentSpace || '',
+          title: e.title || '',
+          url: e.url || '',
+          description: e.description || '',
+          tags: Array.isArray(e.tags) ? e.tags : []
+        })) : [];
 
-    const res = await fetch(jsonbinUrlBase(), {
-      method: 'PUT',
-      headers: {
-        ...jsonbinHeaders(),
-        'X-Bin-Versioning': 'false'
-      },
-      body: JSON.stringify(payload)
+        const localCount = payload.entries.length;
+
+        const res = await fetch(jsonbinUrlBase(), {
+          method: 'PUT',
+          headers: {
+            ...jsonbinHeaders(),
+            'X-Bin-Versioning': 'false'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('PUT ' + res.status);
+
+        const remote = await readRemotePayload();
+        const remoteCount = Array.isArray(remote.entries) ? remote.entries.length : 0;
+
+        if (remoteCount !== localCount) {
+          throw new Error(`Verificación falló: local=${localCount}, remoto=${remoteCount}`);
+        }
+
+        entries = remote.entries;
+        saveSettingsAndLocal(true);
+        render();
+
+        updateStatus(`Subida correcta: ${remoteCount} entradas verificadas`, 'ok');
+        toast(`Datos subidos (${remoteCount})`);
+      } catch (err) {
+        console.error(err);
+        updateStatus('Error al subir', 'err');
+        toast(err.message || 'No se pudo subir a JSONBin');
+      }
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(buildPayload(), null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `perplexity-index-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importJson() {
+      $('fileInput').click();
+    }
+
+    function populateTagFilter() {
+      const current = $('tagFilter').value || 'all';
+      const tags = [...new Set(entries.flatMap(e => Array.isArray(e.tags) ? e.tags : []))].sort((a, b) => a.localeCompare(b, 'es'));
+      $('tagFilter').innerHTML = `<option value="all">Todas las etiquetas</option>${tags.map(tag => `<option value="${escapeAttr(tag)}">${escapeHtml(tag)}</option>`).join('')}`;
+      $('tagFilter').value = tags.includes(current) ? current : 'all';
+    }
+
+    function renderStats() {
+      const spaces = entries.filter(e => (e.type || 'space') === 'space').length;
+      const threads = entries.filter(e => e.type === 'thread').length;
+      const tags = new Set(entries.flatMap(e => Array.isArray(e.tags) ? e.tags : []));
+
+      $('statEntries').textContent = String(entries.length);
+      $('statSpaces').textContent = String(spaces);
+      $('statThreads').textContent = String(threads);
+      $('statTags').textContent = String(tags.size);
+    }
+
+    function getFilteredEntries() {
+      const q = $('search').value.trim().toLowerCase();
+      const type = $('typeFilter').value;
+      const tag = $('tagFilter').value;
+      const sortBy = $('sortBy').value;
+
+      let data = [...entries];
+
+      if (type !== 'all') data = data.filter(e => (e.type || 'space') === type);
+      if (tag !== 'all') data = data.filter(e => Array.isArray(e.tags) && e.tags.includes(tag));
+      if (q) {
+        data = data.filter(e => {
+          const hay = [e.title, e.description, e.parentSpace, ...(Array.isArray(e.tags) ? e.tags : [])]
+            .join(' ')
+            .toLowerCase();
+          return hay.includes(q);
+        });
+      }
+
+      data.sort((a, b) => {
+        if (sortBy === 'title-asc') return (a.title || '').localeCompare(b.title || '', 'es');
+        if (sortBy === 'title-desc') return (b.title || '').localeCompare(a.title || '', 'es');
+
+        const aDate = new Date(a.updatedAt || a.createdAt || 0).getTime();
+        const bDate = new Date(b.updatedAt || b.createdAt || 0).getTime();
+        if (sortBy === 'updated-asc') return aDate - bDate;
+        return bDate - aDate;
+      });
+
+      return data;
+    }
+
+    function renderEntries() {
+      const data = getFilteredEntries();
+      const list = $('entriesList');
+
+      if (!data.length) {
+        list.innerHTML = `<div class="empty">No hay entradas que coincidan con los filtros.</div>`;
+        return;
+      }
+
+      list.innerHTML = data.map(entry => {
+        const typeLabel = entryTypeLabel(entry.type);
+        const updated = formatUpdatedAt(entry.updatedAt || entry.createdAt);
+        const parent = entry.parentSpace ? `<span class="entry-parent">${escapeHtml(entry.parentSpace)}</span>` : '';
+        const description = entry.description ? `<div class="entry-description">${escapeHtml(entry.description)}</div>` : '';
+        const tags = Array.isArray(entry.tags) && entry.tags.length
+          ? `<div class="entry-tags">${entry.tags.map(tag => `<span class="entry-tag">${escapeHtml(tag)}</span>`).join('')}</div>`
+          : '';
+        const openButton = entry.url
+          ? `<a class="btn btn--ghost btn--sm" href="${escapeAttr(entry.url)}" target="_blank" rel="noopener noreferrer">Abrir en Perplexity</a>`
+          : '';
+
+        return `
+          <article class="entry-card">
+            <div class="entry-top">
+              <div class="entry-main">
+                <div class="entry-title-row">
+                  <span class="entry-title">${escapeHtml(entry.title || 'Sin título')}</span>
+                  <span class="entry-badge">${typeLabel}</span>
+                  ${updated ? `<span class="entry-updated">Actualizado: ${escapeHtml(updated)}</span>` : ''}
+                  ${parent}
+                </div>
+                ${description}
+                ${tags}
+              </div>
+              <div class="entry-actions">
+                ${openButton}
+                <button class="btn btn--ghost btn--sm" type="button" onclick="editEntry('${escapeAttr(entry.id)}')">Editar</button>
+                <button class="btn btn--danger btn--sm" type="button" onclick="deleteEntry('${escapeAttr(entry.id)}')">Eliminar</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function render() {
+      populateTagFilter();
+      renderStats();
+      renderEntries();
+    }
+
+    function openModal(entry = null) {
+      $('entryForm').reset();
+      $('entryId').value = entry?.id || '';
+      $('entryType').value = entry?.type || 'space';
+      $('entryParentSpace').value = entry?.parentSpace || '';
+      $('entryTitle').value = entry?.title || '';
+      $('entryUrl').value = entry?.url || '';
+      $('entryDescription').value = entry?.description || '';
+      $('entryTags').value = Array.isArray(entry?.tags) ? entry.tags.join(', ') : '';
+      $('modalTitle').textContent = entry ? 'Editar entrada' : 'Nueva entrada';
+      $('modalBackdrop').classList.add('is-open');
+      $('modalBackdrop').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      $('modalBackdrop').classList.remove('is-open');
+      $('modalBackdrop').setAttribute('aria-hidden', 'true');
+    }
+
+    function editEntry(id) {
+      const entry = entries.find(e => e.id === id);
+      if (!entry) return;
+      openModal(entry);
+    }
+
+    function deleteEntry(id) {
+      const entry = entries.find(e => e.id === id);
+      if (!entry) return;
+      const ok = window.confirm(`¿Eliminar la entrada "${entry.title}"?`);
+      if (!ok) return;
+      entries = entries.filter(e => e.id !== id);
+      saveSettingsAndLocal(false);
+      render();
+    }
+
+    $('entryForm').addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const id = $('entryId').value || uid();
+      const existing = entries.find(e => e.id === id);
+      const now = new Date().toISOString();
+
+      const record = {
+        id,
+        createdAt: existing?.createdAt || now,
+        updatedAt: now,
+        type: $('entryType').value,
+        parentSpace: $('entryParentSpace').value.trim(),
+        title: $('entryTitle').value.trim(),
+        url: $('entryUrl').value.trim(),
+        description: $('entryDescription').value.trim(),
+        tags: $('entryTags').value.split(',').map(s => s.trim()).filter(Boolean)
+      };
+
+      if (!record.title) return;
+
+      const idx = entries.findIndex(e => e.id === id);
+      if (idx >= 0) entries[idx] = record;
+      else entries.unshift(record);
+
+      saveSettingsAndLocal(false);
+      render();
+      closeModal();
     });
 
-    if (!res.ok) throw new Error('PUT ' + res.status);
+    $('fileInput').addEventListener('change', (ev) => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          const imported = Array.isArray(data) ? data : (Array.isArray(data.entries) ? data.entries : []);
+          entries = mergeEntries(entries, imported);
+          saveSettingsAndLocal(true);
+          render();
+          toast('Archivo importado');
+        } catch {
+          toast('No se pudo importar el archivo');
+        }
+      };
+      reader.readAsText(file);
+      ev.target.value = '';
+    });
 
-    const remote = await readRemotePayload();
-    const remoteCount = Array.isArray(remote.entries) ? remote.entries.length : 0;
+    $('addBtn').addEventListener('click', () => openModal());
+    $('cancelBtn').addEventListener('click', closeModal);
+    $('exportBtn').addEventListener('click', exportJson);
+    $('importBtn').addEventListener('click', importJson);
+    $('pullBtn').addEventListener('click', pullJsonbin);
+    $('pushBtn').addEventListener('click', pushJsonbin);
+    $('saveLocalBtn').addEventListener('click', () => saveSettingsAndLocal(true));
+    ['search','typeFilter','tagFilter','sortBy'].forEach(id => {
+      $(id).addEventListener('input', render);
+      $(id).addEventListener('change', render);
+    });
+    ['binId','accessKey'].forEach(id => $(id).addEventListener('change', () => saveSettingsAndLocal(true)));
 
-    if (remoteCount !== localCount) {
-      throw new Error(`Verificación falló: local=${localCount}, remoto=${remoteCount}`);
-    }
+    window.editEntry = editEntry;
+    window.deleteEntry = deleteEntry;
 
-    entries = remote.entries;
-    saveSettingsAndLocal(true);
+    loadSettingsAndLocal();
     render();
-
-    updateStatus(`Subida correcta: ${remoteCount} entradas verificadas`, 'ok');
-    toast(`Datos subidos (${remoteCount})`);
-  } catch (err) {
-    console.error(err);
-    updateStatus('Error al subir', 'err');
-    toast(err.message || 'No se pudo subir a JSONBin');
-  }
-}
-
-function mergeEntries(base, incoming) {
-  const map = new Map(base.map(e => [e.id, e]));
-  incoming.forEach(item => {
-    const prev = map.get(item.id);
-    if (!prev) {
-      map.set(item.id, item);
-    } else {
-      const a = new Date(prev.updatedAt || prev.createdAt || 0).getTime();
-      const b = new Date(item.updatedAt || item.createdAt || 0).getTime();
-      if (b >= a) map.set(item.id, item);
-    }
-  });
-  return [...map.values()];
-}
-
-function exportJson() {
-  const blob = new Blob([JSON.stringify(buildPayload(), null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `perplexity-index-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function importJson() { $('fileInput').click(); }
-
-$('fileInput').addEventListener('change', (ev) => {
-  const file = ev.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result);
-      const imported = Array.isArray(data) ? data : (Array.isArray(data.entries) ? data.entries : []);
-      entries = mergeEntries(entries, imported);
-      saveSettingsAndLocal(true);
-      render();
-      toast('Archivo importado');
-    } catch {
-      toast('No se pudo importar el archivo');
-    }
-  };
-  reader.readAsText(file);
-  ev.target.value = '';
-});
-
-$('addBtn').addEventListener('click', openModal);
-$('closeModalBtn').addEventListener('click', closeModal);
-$('cancelBtn').addEventListener('click', closeModal);
-$('exportBtn').addEventListener('click', exportJson);
-$('importBtn').addEventListener('click', importJson);
-$('pullBtn').addEventListener('click', pullJsonbin);
-$('pushBtn').addEventListener('click', pushJsonbin);
-$('saveLocalBtn').addEventListener('click', () => saveSettingsAndLocal(false));
-['search','typeFilter','tagFilter','sortBy'].forEach(id => {
-  $(id).addEventListener('input', render);
-  $(id).addEventListener('change', render);
-});
-['binId','accessKey'].forEach(id => $(id).addEventListener('change', () => saveSettingsAndLocal(true)));
-
-loadSettingsAndLocal();
-render();
-updateStatus('Listo', 'ok');
-
+    updateStatus('Listo', 'ok');
   </script>
 </body>
 </html>
