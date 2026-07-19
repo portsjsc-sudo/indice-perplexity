@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Índice Perplexity — GitHub Pages + JSONBin</title>
+  <style>
+    :root {
+      --bg: #f7f6f2;
+      --surface: #fbfbf9;
+      --surface-2: #f0eee8;
+      --border: #d8d4cb;
+      --text: #25221c;
+      --muted: #6f6a62;
+      --primary: #01696f;
+      --primary-hover: #0c4e54;
+      --success: #2f7a3e;
+      --warning: #a6681e;
+      --danger: #a13544;
+      --shadow: 0 10px 28px rgba(0,0,0,.07);
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 18px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #171614;
+        --surface: #1d1c1a;
+        --surface-2: #252320;
+        --border: #393733;
+        --text: #e6e1d7;
+        --muted: #aba499;
+        --primary: #4f98a3;
+        --primary-hover: #67aab4;
+        --shadow: 0 10px 28px rgba(0,0,0,.35);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
+    body { min-height: 100vh; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { color: var(--primary-hover); }
+    button, input, select, textarea { font: inherit; }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: var(--space-6); }
+    .hero { display: flex; justify-content: space-between; gap: var(--space-4); align-items: flex-start; flex-wrap: wrap; margin-bottom: var(--space-5); }
+    .hero h1 { margin: 0 0 8px 0; font-size: clamp(30px, 3vw, 44px); }
+    .hero p { margin: 0; max-width: 76ch; color: var(--muted); }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+    .pad { padding: var(--space-5); }
+    .toolbar, .row { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    .btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: 11px 14px; border-radius: var(--r-md); cursor: pointer; transition: .18s ease; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .btn.primary:hover { background: var(--primary-hover); }
+    .btn.small { padding: 7px 10px; font-size: 13px; }
+    .btn.danger { color: var(--danger); }
+    .grid-setup { display: grid; grid-template-columns: 1.2fr 1.1fr auto; gap: var(--space-3); align-items: end; }
+    .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .input, .select, .textarea { width: 100%; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+    .textarea { min-height: 86px; resize: vertical; }
+    .input:focus, .select:focus, .textarea:focus { outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent); border-color: var(--primary); }
+    .hint, .micro { color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; }
+    .badge.ok { color: var(--success); }
+    .badge.warn { color: var(--warning); }
+    .badge.err { color: var(--danger); }
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--space-3); margin: var(--space-4) 0; }
+    .stat { border: 1px solid var(--border); background: var(--surface-2); border-radius: var(--r-md); padding: var(--space-4); }
+    .stat .k { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .stat .v { font-size: 28px; font-weight: 700; }
+    .controls { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr auto; gap: var(--space-3); margin-bottom: var(--space-4); }
+    .list { display: grid; gap: var(--space-3); }
+    .item { padding: var(--space-4); border-radius: var(--r-md); border: 1px solid var(--border); background: var(--surface); }
+    .item-top { display: flex; gap: var(--space-3); justify-content: space-between; align-items: flex-start; }
+    .item h3 { margin: 0 0 8px 0; font-size: 18px; }
+    .meta { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    .pill { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); }
+    .callout { margin-top: var(--space-4); padding: var(--space-4); border: 1px dashed var(--border); border-radius: var(--r-md); background: var(--surface-2); }
+    .status { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3); }
+    .empty { text-align: center; color: var(--muted); padding: var(--space-10); }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; padding: var(--space-4); }
+    .modal-backdrop.open { display: flex; }
+    .modal { width: min(780px, 100%); }
+    .modal-header, .modal-body { padding: var(--space-5); }
+    .modal-header { border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+    .full { grid-column: 1 / -1; }
+    .toast { position: fixed; right: 20px; bottom: 20px; background: var(--text); color: var(--bg); padding: 12px 14px; border-radius: 12px; opacity: 0; transform: translateY(14px); transition: .22s ease; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    @media (max-width: 920px) {
+      .grid-setup, .controls, .stats, .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <h1>Índice Perplexity</h1>
+        <p>Versión ajustada para <strong>GitHub Pages + JSONBin</strong>, con URL completa a tus Espacios e Hilos en Perplexity y sincronización manual entre equipos.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn" id="exportBtn">Exportar JSON</button>
+        <button class="btn" id="importBtn">Importar JSON</button>
+        <button class="btn primary" id="addBtn">Agregar entrada</button>
+      </div>
+    </header>
+
+    <section class="panel pad">
+      <h2 style="margin:0 0 14px 0;">Configuración JSONBin</h2>
+      <div class="grid-setup">
+        <div class="field">
+          <label for="binId">Bin ID</label>
+          <input id="binId" class="input mono" placeholder="Ej: 687a76c6ae596e708fc0b4bf">
+        </div>
+        <div class="field">
+          <label for="accessKey">X-Access-Key limitada</label>
+          <input id="accessKey" class="input mono" placeholder="$2a$10$...">
+        </div>
+        <div class="row">
+          <button class="btn" id="pullBtn">Descargar</button>
+          <button class="btn primary" id="pushBtn">Subir</button>
+        </div>
+      </div>
+      <div class="status" id="syncStatus"></div>
+      <div class="callout">
+        <div class="hint">
+          Esta versión usa el endpoint estándar de JSONBin para leer el último contenido del bin y sobrescribirlo al subir cambios. Para frontend conviene usar <span class="mono">X-Access-Key</span> en vez de <span class="mono">X-Master-Key</span>; JSONBin lo recomienda explícitamente porque la Master Key tiene acceso completo y es más apropiada para backend, mientras que las Access Keys se pueden configurar por endpoint y con permisos acotados. [web:121][web:123]
+        </div>
+      </div>
+    </section>
+
+    <section class="panel pad" style="margin-top:24px;">
+      <div class="controls">
+        <div class="field">
+          <label for="search">Buscar</label>
+          <input id="search" class="input" placeholder="Título, tema, etiquetas o nombre del espacio padre">
+        </div>
+        <div class="field">
+          <label for="typeFilter">Tipo</label>
+          <select id="typeFilter" class="select">
+            <option value="all">Todos</option>
+            <option value="space">Espacios</option>
+            <option value="thread">Hilos</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="tagFilter">Etiqueta</label>
+          <select id="tagFilter" class="select"><option value="">Todas</option></select>
+        </div>
+        <div class="field">
+          <label for="sortBy">Orden</label>
+          <select id="sortBy" class="select">
+            <option value="newest">Más recientes</option>
+            <option value="oldest">Más antiguos</option>
+            <option value="alpha">A → Z</option>
+            <option value="alpha-desc">Z → A</option>
+          </select>
+        </div>
+        <div class="row" style="align-items:end;">
+          <button class="btn" id="saveLocalBtn">Guardar local</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="k">Total</div><div class="v" id="statTotal">0</div></div>
+        <div class="stat"><div class="k">Espacios</div><div class="v" id="statSpaces">0</div></div>
+        <div class="stat"><div class="k">Hilos</div><div class="v" id="statThreads">0</div></div>
+        <div class="stat"><div class="k">Etiquetas</div><div class="v" id="statTags">0</div></div>
+      </div>
+
+      <div class="list" id="list"></div>
+      <p class="micro" style="margin-top:16px;">Flujo sugerido: en tu PC Windows haces cambios y pulsas <strong>Subir</strong>; en tu Mac abres la misma app publicada en GitHub Pages y pulsas <strong>Descargar</strong> antes de seguir trabajando.</p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="panel modal">
+      <div class="modal-header">
+        <h2 id="modalTitle" style="margin:0;">Nueva entrada</h2>
+        <button class="btn small" id="closeModalBtn">Cerrar</button>
+      </div>
+      <div class="modal-body">
+        <form id="entryForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="entryType">Tipo</label>
+              <select id="entryType" class="select">
+                <option value="space">Espacio</option>
+                <option value="thread">Hilo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="entryParent">Espacio padre</label>
+              <select id="entryParent" class="select"><option value="">(Sin espacio padre)</option></select>
+            </div>
+            <div class="field full">
+              <label for="entryTitle">Título</label>
+              <input id="entryTitle" class="input" required>
+            </div>
+            <div class="field full">
+              <label for="entryUrl">URL completa de Perplexity</label>
+              <input id="entryUrl" class="input" type="url" placeholder="https://www.perplexity.ai/...">
+            </div>
+            <div class="field full">
+              <label for="entryDesc">Tema / descripción breve</label>
+              <textarea id="entryDesc" class="textarea"></textarea>
+            </div>
+            <div class="field full">
+              <label for="entryTags">Etiquetas</label>
+              <input id="entryTags" class="input" placeholder="simulación, puerto, DES">
+            </div>
+          </div>
+          <div class="row" style="margin-top:16px; justify-content:flex-end;">
+            <button type="button" class="btn" id="cancelBtn">Cancelar</button>
+            <button type="submit" class="btn primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept="application/json,.json" hidden>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = 'pplx_index_jsonbin_v1';
+    const SETTINGS_KEY = 'pplx_index_jsonbin_settings_v1';
+    let entries = [];
+    let editingId = null;
+    const $ = id => document.getElementById(id);
+
+    function toast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    function uid() {
+      return 'id_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
+
+    function escapeHtml(v='') {
+      return String(v).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function saveSettingsAndLocal(silent = false) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        binId: $('binId').value.trim(),
+        accessKey: $('accessKey').value.trim()
+      }));
+      updateStatus('Local actualizado', 'ok');
+      if (!silent) toast('Guardado en este navegador');
+    }
+
+    function loadSettingsAndLocal() {
+      try { entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { entries = []; }
+      try {
+        const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+        $('binId').value = s.binId || '';
+        $('accessKey').value = s.accessKey || '';
+      } catch {}
+    }
+
+    function getParentTitle(id) {
+      const item = entries.find(e => e.id === id);
+      return item ? item.title : '';
+    }
+
+    function updateParentOptions() {
+      const select = $('entryParent');
+      const current = select.value;
+      select.innerHTML = '<option value="">(Sin espacio padre)</option>';
+      entries.filter(e => e.type === 'space').sort((a,b)=>a.title.localeCompare(b.title,'es')).forEach(space => {
+        const o = document.createElement('option');
+        o.value = space.id;
+        o.textContent = space.title;
+        select.appendChild(o);
+      });
+      select.value = current || '';
+    }
+
+    function updateTagFilter() {
+      const select = $('tagFilter');
+      const current = select.value;
+      const tags = [...new Set(entries.flatMap(e => e.tags || []))].sort((a,b)=>a.localeCompare(b,'es'));
+      select.innerHTML = '<option value="">Todas</option>';
+      tags.forEach(tag => {
+        const o = document.createElement('option');
+        o.value = tag;
+        o.textContent = tag;
+        select.appendChild(o);
+      });
+      select.value = current;
+    }
+
+    function currentView() {
+      const q = $('search').value.trim().toLowerCase();
+      const type = $('typeFilter').value;
+      const tag = $('tagFilter').value;
+      let arr = entries.filter(e => {
+        if (type !== 'all' && e.type !== type) return false;
+        if (tag && !(e.tags || []).includes(tag)) return false;
+        if (!q) return true;
+        const blob = [e.title, e.description || '', e.url || '', (e.tags || []).join(' '), getParentTitle(e.parentSpace || '')].join(' ').toLowerCase();
+        return blob.includes(q);
+      });
+      const sort = $('sortBy').value;
+      if (sort === 'newest') arr.sort((a,b)=>new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+      if (sort === 'oldest') arr.sort((a,b)=>new Date(a.createdAt) - new Date(b.createdAt));
+      if (sort === 'alpha') arr.sort((a,b)=>a.title.localeCompare(b.title,'es'));
+      if (sort === 'alpha-desc') arr.sort((a,b)=>b.title.localeCompare(a.title,'es'));
+      return arr;
+    }
+
+    function renderStats(arr) {
+      $('statTotal').textContent = arr.length;
+      $('statSpaces').textContent = arr.filter(e => e.type === 'space').length;
+      $('statThreads').textContent = arr.filter(e => e.type === 'thread').length;
+      $('statTags').textContent = new Set(arr.flatMap(e => e.tags || [])).size;
+    }
+
+    function render() {
+      updateParentOptions();
+      updateTagFilter();
+      const arr = currentView();
+      renderStats(arr);
+      if (!arr.length) {
+        $('list').innerHTML = '<div class="empty panel">No hay entradas para mostrar.</div>';
+        return;
+      }
+      $('list').innerHTML = arr.map(e => {
+        const tags = (e.tags || []).map(t => `<span class="pill">${escapeHtml(t)}</span>`).join('');
+        const parent = e.parentSpace ? `<span class="pill">Espacio: ${escapeHtml(getParentTitle(e.parentSpace))}</span>` : '';
+        const link = e.url ? `<a href="${escapeHtml(e.url)}" target="_blank" rel="noopener noreferrer">Abrir en Perplexity</a>` : '<span class="pill">Sin URL</span>';
+        return `
+          <article class="item">
+            <div class="item-top">
+              <div>
+                <h3>${escapeHtml(e.title)}</h3>
+                <div class="meta">
+                  <span class="pill">${e.type === 'space' ? 'Espacio' : 'Hilo'}</span>
+                  ${parent}
+                  ${tags}
+                  <span class="pill">Actualizado: ${new Date(e.updatedAt || e.createdAt).toLocaleString('es-CL')}</span>
+                </div>
+                ${e.description ? `<p class="micro" style="margin:12px 0 0 0;">${escapeHtml(e.description)}</p>` : ''}
+                ${e.url ? `<p class="micro" style="margin:8px 0 0 0;"><span class="mono">${escapeHtml(e.url)}</span></p>` : ''}
+              </div>
+              <div class="row">
+                <button class="btn small" onclick="editEntry('${e.id}')">Editar</button>
+                <button class="btn small" onclick="duplicateEntry('${e.id}')">Duplicar</button>
+                <button class="btn small danger" onclick="removeEntry('${e.id}')">Eliminar</button>
+                ${link}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function updateStatus(message, tone='ok') {
+      const binId = $('binId').value.trim();
+      $('syncStatus').innerHTML = `
+        <span class="badge ${tone}">${escapeHtml(message)}</span>
+        <span class="badge">${entries.length} entradas locales</span>
+        <span class="badge">${binId ? 'Bin configurado' : 'Sin Bin ID'}</span>
+      `;
+    }
+
+    function openModal() {
+      editingId = null;
+      $('modalTitle').textContent = 'Nueva entrada';
+      $('entryForm').reset();
+      updateParentOptions();
+      $('modalBackdrop').classList.add('open');
+    }
+    function closeModal() { $('modalBackdrop').classList.remove('open'); }
+
+    function editEntry(id) {
+      const e = entries.find(x => x.id === id);
+      if (!e) return;
+      editingId = id;
+      $('modalTitle').textContent = 'Editar entrada';
+      $('entryType').value = e.type;
+      updateParentOptions();
+      $('entryParent').value = e.parentSpace || '';
+      $('entryTitle').value = e.title || '';
+      $('entryUrl').value = e.url || '';
+      $('entryDesc').value = e.description || '';
+      $('entryTags').value = (e.tags || []).join(', ');
+      $('modalBackdrop').classList.add('open');
+    }
+
+    function duplicateEntry(id) {
+      const e = entries.find(x => x.id === id);
+      if (!e) return;
+      entries.unshift({ ...e, id: uid(), title: e.title + ' (copia)', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+      saveSettingsAndLocal(true);
+      render();
+      toast('Entrada duplicada');
+    }
+
+    function removeEntry(id) {
+      const e = entries.find(x => x.id === id);
+      if (!e) return;
+      if (!confirm(`¿Eliminar "${e.title}"?`)) return;
+      entries = entries.filter(x => x.id !== id);
+      entries = entries.map(x => x.parentSpace === id ? { ...x, parentSpace: '' } : x);
+      saveSettingsAndLocal(true);
+      render();
+      toast('Entrada eliminada');
+    }
+
+    $('entryForm').addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const payload = {
+        type: $('entryType').value,
+        parentSpace: $('entryParent').value || '',
+        title: $('entryTitle').value.trim(),
+        url: $('entryUrl').value.trim(),
+        description: $('entryDesc').value.trim(),
+        tags: $('entryTags').value.split(',').map(s => s.trim()).filter(Boolean),
+        updatedAt: new Date().toISOString()
+      };
+      if (!payload.title) return toast('El título es obligatorio');
+      if (editingId) {
+        const idx = entries.findIndex(e => e.id === editingId);
+        entries[idx] = { ...entries[idx], ...payload };
+      } else {
+        entries.unshift({ id: uid(), createdAt: new Date().toISOString(), ...payload });
+      }
+      saveSettingsAndLocal(true);
+      closeModal();
+      render();
+      toast(editingId ? 'Entrada actualizada' : 'Entrada agregada');
+    });
+
+    function buildPayload() {
+      return {
+        app: 'perplexity-index',
+        storage: 'jsonbin',
+        version: 1,
+        updatedAt: new Date().toISOString(),
+        entries
+      };
+    }
+
+    function jsonbinHeaders() {
+      const accessKey = $('accessKey').value.trim();
+      if (!accessKey) throw new Error('Falta X-Access-Key');
+      return {
+        'Content-Type': 'application/json',
+        'X-Access-Key': accessKey
+      };
+    }
+
+    function jsonbinUrlLatest() {
+      const binId = $('binId').value.trim();
+      if (!binId) throw new Error('Falta Bin ID');
+      return `https://api.jsonbin.io/v3/b/${binId}/latest`;
+    }
+
+    function jsonbinUrlBase() {
+      const binId = $('binId').value.trim();
+      if (!binId) throw new Error('Falta Bin ID');
+      return `https://api.jsonbin.io/v3/b/${binId}`;
+    }
+
+    async function pullJsonbin() {
+      try {
+        updateStatus('Descargando desde JSONBin...', 'warn');
+        const res = await fetch(jsonbinUrlLatest(), { headers: jsonbinHeaders() });
+        if (!res.ok) throw new Error('GET ' + res.status);
+        const data = await res.json();
+        const remoteEntries = Array.isArray(data.record?.entries) ? data.record.entries : [];
+        entries = mergeEntries(entries, remoteEntries);
+        saveSettingsAndLocal(true);
+        render();
+        updateStatus('Descarga correcta', 'ok');
+        toast('Datos descargados');
+      } catch (err) {
+        console.error(err);
+        updateStatus('Error al descargar', 'err');
+        toast('No se pudo descargar desde JSONBin');
+      }
+    }
+
+    async function pushJsonbin() {
+      try {
+        updateStatus('Subiendo a JSONBin...', 'warn');
+        const res = await fetch(jsonbinUrlBase(), {
+          method: 'PUT',
+          headers: jsonbinHeaders(),
+          body: JSON.stringify(buildPayload())
+        });
+        if (!res.ok) throw new Error('PUT ' + res.status);
+        saveSettingsAndLocal(true);
+        updateStatus('Subida correcta', 'ok');
+        toast('Datos subidos');
+      } catch (err) {
+        console.error(err);
+        updateStatus('Error al subir', 'err');
+        toast('No se pudo subir a JSONBin');
+      }
+    }
+
+    function mergeEntries(base, incoming) {
+      const map = new Map(base.map(e => [e.id, e]));
+      incoming.forEach(item => {
+        const prev = map.get(item.id);
+        if (!prev) {
+          map.set(item.id, item);
+        } else {
+          const a = new Date(prev.updatedAt || prev.createdAt || 0).getTime();
+          const b = new Date(item.updatedAt || item.createdAt || 0).getTime();
+          if (b >= a) map.set(item.id, item);
+        }
+      });
+      return [...map.values()];
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(buildPayload(), null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `perplexity-index-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importJson() { $('fileInput').click(); }
+
+    $('fileInput').addEventListener('change', (ev) => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          const imported = Array.isArray(data) ? data : (Array.isArray(data.entries) ? data.entries : []);
+          entries = mergeEntries(entries, imported);
+          saveSettingsAndLocal(true);
+          render();
+          toast('Archivo importado');
+        } catch {
+          toast('No se pudo importar el archivo');
+        }
+      };
+      reader.readAsText(file);
+      ev.target.value = '';
+    });
+
+    $('addBtn').addEventListener('click', openModal);
+    $('closeModalBtn').addEventListener('click', closeModal);
+    $('cancelBtn').addEventListener('click', closeModal);
+    $('exportBtn').addEventListener('click', exportJson);
+    $('importBtn').addEventListener('click', importJson);
+    $('pullBtn').addEventListener('click', pullJsonbin);
+    $('pushBtn').addEventListener('click', pushJsonbin);
+    $('saveLocalBtn').addEventListener('click', () => saveSettingsAndLocal(false));
+    ['search','typeFilter','tagFilter','sortBy'].forEach(id => {
+      $(id).addEventListener('input', render);
+      $(id).addEventListener('change', render);
+    });
+    ['binId','accessKey'].forEach(id => $(id).addEventListener('change', () => saveSettingsAndLocal(true)));
+
+    loadSettingsAndLocal();
+    render();
+    updateStatus('Listo', 'ok');
+  </script>
+</body>
+</html>
