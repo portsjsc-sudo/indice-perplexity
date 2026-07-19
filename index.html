@@ -458,128 +458,183 @@
       };
     }
 
-    function jsonbinHeaders() {
-      const accessKey = $('accessKey').value.trim();
-      if (!accessKey) throw new Error('Falta X-Access-Key');
-      return {
-        'Content-Type': 'application/json',
-        'X-Access-Key': accessKey
-      };
-    }
+function jsonbinHeaders() {
+  const accessKey = $('accessKey').value.trim();
+  if (!accessKey) throw new Error('Falta X-Access-Key');
+  return {
+    'Content-Type': 'application/json',
+    'X-Access-Key': accessKey
+  };
+}
 
-    function jsonbinUrlLatest() {
-      const binId = $('binId').value.trim();
-      if (!binId) throw new Error('Falta Bin ID');
-      return `https://api.jsonbin.io/v3/b/${binId}/latest`;
-    }
+function jsonbinUrlLatest() {
+  const binId = $('binId').value.trim();
+  if (!binId) throw new Error('Falta Bin ID');
+  return `https://api.jsonbin.io/v3/b/${binId}/latest?ts=${Date.now()}`;
+}
 
-    function jsonbinUrlBase() {
-      const binId = $('binId').value.trim();
-      if (!binId) throw new Error('Falta Bin ID');
-      return `https://api.jsonbin.io/v3/b/${binId}`;
-    }
+function jsonbinUrlBase() {
+  const binId = $('binId').value.trim();
+  if (!binId) throw new Error('Falta Bin ID');
+  return `https://api.jsonbin.io/v3/b/${binId}`;
+}
 
-    async function pullJsonbin() {
-      try {
-        updateStatus('Descargando desde JSONBin...', 'warn');
-        const res = await fetch(jsonbinUrlLatest(), { headers: jsonbinHeaders() });
-        if (!res.ok) throw new Error('GET ' + res.status);
-        const data = await res.json();
-        const remoteEntries = Array.isArray(data.record?.entries) ? data.record.entries : [];
-        entries = mergeEntries(entries, remoteEntries);
-        saveSettingsAndLocal(true);
-        render();
-        updateStatus('Descarga correcta', 'ok');
-        toast('Datos descargados');
-      } catch (err) {
-        console.error(err);
-        updateStatus('Error al descargar', 'err');
-        toast('No se pudo descargar desde JSONBin');
-      }
-    }
+function normalizeRemotePayload(data) {
+  const record = data?.record || data || {};
+  return {
+    app: record.app || 'perplexity-index',
+    storage: record.storage || 'jsonbin',
+    version: Number.isFinite(record.version) ? record.version : 1,
+    updatedAt: record.updatedAt || new Date().toISOString(),
+    entries: Array.isArray(record.entries) ? record.entries : []
+  };
+}
 
-    async function pushJsonbin() {
-      try {
-        updateStatus('Subiendo a JSONBin...', 'warn');
-        const res = await fetch(jsonbinUrlBase(), {
-          method: 'PUT',
-          headers: jsonbinHeaders(),
-          body: JSON.stringify(buildPayload())
-        });
-        if (!res.ok) throw new Error('PUT ' + res.status);
-        saveSettingsAndLocal(true);
-        updateStatus('Subida correcta', 'ok');
-        toast('Datos subidos');
-      } catch (err) {
-        console.error(err);
-        updateStatus('Error al subir', 'err');
-        toast('No se pudo subir a JSONBin');
-      }
-    }
+async function readRemotePayload() {
+  const res = await fetch(jsonbinUrlLatest(), {
+    method: 'GET',
+    headers: jsonbinHeaders(),
+    cache: 'no-store'
+  });
+  if (!res.ok) throw new Error('GET ' + res.status);
+  const data = await res.json();
+  return normalizeRemotePayload(data);
+}
 
-    function mergeEntries(base, incoming) {
-      const map = new Map(base.map(e => [e.id, e]));
-      incoming.forEach(item => {
-        const prev = map.get(item.id);
-        if (!prev) {
-          map.set(item.id, item);
-        } else {
-          const a = new Date(prev.updatedAt || prev.createdAt || 0).getTime();
-          const b = new Date(item.updatedAt || item.createdAt || 0).getTime();
-          if (b >= a) map.set(item.id, item);
-        }
-      });
-      return [...map.values()];
-    }
+async function pullJsonbin() {
+  try {
+    updateStatus('Descargando desde JSONBin...', 'warn');
 
-    function exportJson() {
-      const blob = new Blob([JSON.stringify(buildPayload(), null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `perplexity-index-${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
+    const remote = await readRemotePayload();
+    entries = Array.isArray(remote.entries) ? remote.entries : [];
 
-    function importJson() { $('fileInput').click(); }
-
-    $('fileInput').addEventListener('change', (ev) => {
-      const file = ev.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          const imported = Array.isArray(data) ? data : (Array.isArray(data.entries) ? data.entries : []);
-          entries = mergeEntries(entries, imported);
-          saveSettingsAndLocal(true);
-          render();
-          toast('Archivo importado');
-        } catch {
-          toast('No se pudo importar el archivo');
-        }
-      };
-      reader.readAsText(file);
-      ev.target.value = '';
-    });
-
-    $('addBtn').addEventListener('click', openModal);
-    $('closeModalBtn').addEventListener('click', closeModal);
-    $('cancelBtn').addEventListener('click', closeModal);
-    $('exportBtn').addEventListener('click', exportJson);
-    $('importBtn').addEventListener('click', importJson);
-    $('pullBtn').addEventListener('click', pullJsonbin);
-    $('pushBtn').addEventListener('click', pushJsonbin);
-    $('saveLocalBtn').addEventListener('click', () => saveSettingsAndLocal(false));
-    ['search','typeFilter','tagFilter','sortBy'].forEach(id => {
-      $(id).addEventListener('input', render);
-      $(id).addEventListener('change', render);
-    });
-    ['binId','accessKey'].forEach(id => $(id).addEventListener('change', () => saveSettingsAndLocal(true)));
-
-    loadSettingsAndLocal();
+    saveSettingsAndLocal(true);
     render();
-    updateStatus('Listo', 'ok');
+
+    updateStatus(`Descarga correcta: ${entries.length} entradas remotas`, 'ok');
+    toast(`Datos descargados (${entries.length})`);
+  } catch (err) {
+    console.error(err);
+    updateStatus('Error al descargar', 'err');
+    toast('No se pudo descargar desde JSONBin');
+  }
+}
+
+async function pushJsonbin() {
+  try {
+    updateStatus('Subiendo a JSONBin...', 'warn');
+
+    const payload = buildPayload();
+    payload.updatedAt = new Date().toISOString();
+    payload.entries = Array.isArray(entries) ? entries.map(e => ({
+      id: e.id,
+      createdAt: e.createdAt || new Date().toISOString(),
+      updatedAt: e.updatedAt || e.createdAt || new Date().toISOString(),
+      type: e.type || 'space',
+      parentSpace: e.parentSpace || '',
+      title: e.title || '',
+      url: e.url || '',
+      description: e.description || '',
+      tags: Array.isArray(e.tags) ? e.tags : []
+    })) : [];
+
+    const localCount = payload.entries.length;
+
+    const res = await fetch(jsonbinUrlBase(), {
+      method: 'PUT',
+      headers: {
+        ...jsonbinHeaders(),
+        'X-Bin-Versioning': 'false'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('PUT ' + res.status);
+
+    const remote = await readRemotePayload();
+    const remoteCount = Array.isArray(remote.entries) ? remote.entries.length : 0;
+
+    if (remoteCount !== localCount) {
+      throw new Error(`Verificación falló: local=${localCount}, remoto=${remoteCount}`);
+    }
+
+    entries = remote.entries;
+    saveSettingsAndLocal(true);
+    render();
+
+    updateStatus(`Subida correcta: ${remoteCount} entradas verificadas`, 'ok');
+    toast(`Datos subidos (${remoteCount})`);
+  } catch (err) {
+    console.error(err);
+    updateStatus('Error al subir', 'err');
+    toast(err.message || 'No se pudo subir a JSONBin');
+  }
+}
+
+function mergeEntries(base, incoming) {
+  const map = new Map(base.map(e => [e.id, e]));
+  incoming.forEach(item => {
+    const prev = map.get(item.id);
+    if (!prev) {
+      map.set(item.id, item);
+    } else {
+      const a = new Date(prev.updatedAt || prev.createdAt || 0).getTime();
+      const b = new Date(item.updatedAt || item.createdAt || 0).getTime();
+      if (b >= a) map.set(item.id, item);
+    }
+  });
+  return [...map.values()];
+}
+
+function exportJson() {
+  const blob = new Blob([JSON.stringify(buildPayload(), null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `perplexity-index-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importJson() { $('fileInput').click(); }
+
+$('fileInput').addEventListener('change', (ev) => {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const imported = Array.isArray(data) ? data : (Array.isArray(data.entries) ? data.entries : []);
+      entries = mergeEntries(entries, imported);
+      saveSettingsAndLocal(true);
+      render();
+      toast('Archivo importado');
+    } catch {
+      toast('No se pudo importar el archivo');
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+});
+
+$('addBtn').addEventListener('click', openModal);
+$('closeModalBtn').addEventListener('click', closeModal);
+$('cancelBtn').addEventListener('click', closeModal);
+$('exportBtn').addEventListener('click', exportJson);
+$('importBtn').addEventListener('click', importJson);
+$('pullBtn').addEventListener('click', pullJsonbin);
+$('pushBtn').addEventListener('click', pushJsonbin);
+$('saveLocalBtn').addEventListener('click', () => saveSettingsAndLocal(false));
+['search','typeFilter','tagFilter','sortBy'].forEach(id => {
+  $(id).addEventListener('input', render);
+  $(id).addEventListener('change', render);
+});
+['binId','accessKey'].forEach(id => $(id).addEventListener('change', () => saveSettingsAndLocal(true)));
+
+loadSettingsAndLocal();
+render();
+updateStatus('Listo', 'ok');
+
   </script>
 </body>
 </html>
